@@ -4,14 +4,11 @@ project(NoSQL_DBMS_Network)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wall -Wextra")
 
-# Общие файлы для всех проектов
 set(COMMON_SOURCES
     JsonParser.cpp
     network_protocol.cpp
 )
 
-# === Сервер БД (db_server) ===
-# Проверяем, есть ли необходимые файлы
 set(SERVER_SOURCES
     db_server.cpp
     database.cpp
@@ -20,7 +17,6 @@ set(SERVER_SOURCES
     QueryCondition.cpp
 )
 
-# Проверяем существование файлов
 set(ALL_SERVER_SOURCES_FOUND TRUE)
 foreach(source_file ${SERVER_SOURCES})
     if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${source_file})
@@ -45,7 +41,6 @@ else()
     message(WARNING "DB server target NOT added - missing source files")
 endif()
 
-# === Клиент БД (db_client) ===
 set(CLIENT_SOURCES
     db_client.cpp
 )
@@ -67,13 +62,12 @@ else()
     message(WARNING "DB client target NOT added - missing source files")
 endif()
 
-# === SIEM Agent ===
 set(SIEM_SOURCES
     siem_agent.cpp
     siem_agent_main.cpp
-    event_processor.cpp      # <-- Добавьте этот файл
-    inotify_wrapper.cpp      # <-- Добавьте этот файл
-    persistent_buffer.cpp    # <-- Добавьте этот файл
+    event_processor.cpp     
+    inotify_wrapper.cpp     
+    persistent_buffer.cpp   
 )
 
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/siem_agent.cpp AND 
@@ -93,7 +87,6 @@ else()
     message(WARNING "SIEM agent target NOT added - missing source files")
 endif()
 
-# === Тестовый клиент SIEM ===
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test_siem.cpp)
     add_executable(test_siem
         test_siem.cpp
@@ -108,7 +101,6 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test_siem.cpp)
     message(STATUS "Test SIEM client target added")
 endif()
 
-# Копирование конфигурационных файлов
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/siem_config.json)
     configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/siem_config.json
@@ -118,7 +110,6 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/siem_config.json)
     message(STATUS "SIEM config file will be copied")
 endif()
 
-# Информация о доступных целях
 message(STATUS "==============================================")
 message(STATUS "Available targets:")
 if(ALL_SERVER_SOURCES_FOUND)
